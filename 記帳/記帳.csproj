@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSVHelper">
+      <HintPath>..\..\CSVHelper\CSVHelper\bin\Debug\CSVHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,14 +49,58 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Components\NavBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\NavBar.Designer.cs">
+      <DependentUpon>NavBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\ComboBoxExtension.cs" />
+    <Compile Include="Forms\AccountForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\AccountForm.Designer.cs">
+      <DependentUpon>AccountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RecordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RecordForm.Designer.cs">
+      <DependentUpon>RecordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddRecordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddRecordForm.Designer.cs">
+      <DependentUpon>AddRecordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SingletonForm.cs" />
+    <Compile Include="Models\Enums\FormType.cs" />
+    <Compile Include="Models\ModelTypes\ModelTypes.cs" />
+    <Compile Include="Models\Record.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Components\NavBar.resx">
+      <DependentUpon>NavBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountForm.resx">
+      <DependentUpon>AccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddRecordForm.resx">
+      <DependentUpon>AddRecordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RecordForm.resx">
+      <DependentUpon>RecordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -76,5 +123,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

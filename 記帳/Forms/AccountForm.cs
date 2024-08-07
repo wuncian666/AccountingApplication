@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace 記帳
+namespace 記帳.Forms
 {
-    public partial class Form1 : Form
+    public partial class AccountForm : Form
     {
-        public Form1()
+        public AccountForm()
         {
             InitializeComponent();
         }
