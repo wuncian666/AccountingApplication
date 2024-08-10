@@ -6,22 +6,29 @@ namespace 記帳.Utils
 {
     class ImageCompress
     {
-        public static EncoderParameters CompressImage(int quality)
+        public static Bitmap Compress(Image image, int quality, bool isOrigin)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            var encoder = GetEncoder(ImageFormat.Jpeg);
+            var parameters = GetCompressParameters(quality);
+            image.Save(memoryStream, encoder, parameters);
+
+            if (isOrigin)
+            {
+                return new Bitmap(memoryStream);
+            }
+
+            Bitmap bitmap = new Bitmap(memoryStream);
+            return new Bitmap(bitmap, 50, 50);
+        }
+
+        private static EncoderParameters GetCompressParameters(int quality)
         {
             Encoder QualityEncoder = Encoder.Quality;
             EncoderParameters parameters = new EncoderParameters(1);
             EncoderParameter parameter = new EncoderParameter(QualityEncoder, quality);
             parameters.Param[0] = parameter;
             return parameters;
-        }
-
-        public static Bitmap Compress(Image image, EncoderParameters parameters)
-        {
-            ImageCodecInfo encoder = GetEncoder(ImageFormat.Jpeg);
-            MemoryStream memoryStream = new MemoryStream();
-            image.Save(memoryStream, encoder, parameters);
-            Bitmap bitmap = new Bitmap(memoryStream);
-            return new Bitmap(bitmap, 50, 50);
         }
 
         private static ImageCodecInfo GetEncoder(ImageFormat format)

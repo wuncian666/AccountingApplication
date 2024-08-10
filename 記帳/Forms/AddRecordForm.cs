@@ -1,7 +1,6 @@
 ﻿using CSVHelper;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using 記帳.Extensions;
@@ -52,10 +51,15 @@ namespace 記帳.Forms
             string currentDayPath = path + "\\" + dateTimePicker1.Value.ToString("yyyy_MM_dd");
             this.CheckPathExists(currentDayPath);
 
+            // Compress to a percentage of the oriainal image.
+            int quality = 1;
             ImagePath imagePath1 = new ImagePath(currentDayPath);
-            this.SaveImage(pictureBox1.Image, imagePath1.Origin, imagePath1.Compress);
+            ImageCompress.Compress(pictureBox1.Image, quality, true).Save(imagePath1.Origin);
+            ImageCompress.Compress(pictureBox1.Image, quality, false).Save(imagePath1.Compress);
+
             ImagePath imagePath2 = new ImagePath(currentDayPath);
-            this.SaveImage(pictureBox2.Image, imagePath2.Origin, imagePath2.Compress);
+            ImageCompress.Compress(pictureBox2.Image, quality, true).Save(imagePath2.Origin);
+            ImageCompress.Compress(pictureBox2.Image, quality, false).Save(imagePath2.Compress);
 
             List<Record> records = new List<Record>
             {
@@ -79,15 +83,6 @@ namespace 記帳.Forms
             {
                 Directory.CreateDirectory(path);
             }
-        }
-
-        private void SaveImage(Image image, string originPath, string compressPath)
-        {
-            image.Save(originPath);
-
-            var compress = ImageCompress.CompressImage(1);
-            Bitmap result = ImageCompress.Compress(image, compress);
-            result.Save(compressPath);
         }
 
         private void image_Click(object sender, EventArgs e)
