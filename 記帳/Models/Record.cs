@@ -15,21 +15,27 @@ namespace 記帳.Models
         [DisplayName("對象")]
         public string Target { get; set; }
         [DisplayName("圖片1路徑")]
-        public string image1 { get; set; }
+        public string Image1 { get; set; }
+        [DisplayName("圖片1壓縮路徑")]
+        public string CompressImage1 { get; set; }
         [DisplayName("圖片2路徑")]
-        public string image2 { get; set; }
+        public string Image2 { get; set; }
+        [DisplayName("圖片2壓縮路徑")]
+        public string CompressImage2 { get; set; }
 
         public Record() { }
 
-        public Record(string amount, string type, string item, string paymentMethod, string target, string image1, string image2)
+        public Record(string amount, string type, string item, string paymentMethod, string target, string image1, string compressImage1, string image2, string compressImage2)
         {
             Amount = amount;
             Type = type;
             Item = item;
             PaymentMethod = paymentMethod;
             Target = target;
-            this.image1 = image1;
-            this.image2 = image2;
+            this.Image1 = image1;
+            this.CompressImage1 = compressImage1;
+            this.Image2 = image2;
+            this.CompressImage2 = compressImage2;
         }
     }
 }

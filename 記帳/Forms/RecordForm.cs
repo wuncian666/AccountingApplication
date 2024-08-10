@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using 記帳.Models;
 
@@ -18,35 +19,58 @@ namespace 記帳.Forms
         {
             dataGridView1.Columns.Clear();
             GC.Collect();
-            string path = "D:\\files\\record.csv";
 
-            List<Record> data = CSV.Read<Record>(path, false);
+            List<Record> data = this.GetDateRangeRecord();
             dataGridView1.DataSource = data;
 
+            // Hide the path columns.
             dataGridView1.Columns[5].Visible = false;
             dataGridView1.Columns[6].Visible = false;
+            dataGridView1.Columns[7].Visible = false;
+            dataGridView1.Columns[8].Visible = false;
 
-            DataGridViewImageColumn iconColumn1 = new DataGridViewImageColumn
-            {
-                ImageLayout = DataGridViewImageCellLayout.Zoom
-            };
-            dataGridView1.Columns.Insert(7, iconColumn1);
-            dataGridView1.Columns[7].HeaderText = "圖片1";
+            this.AddNewDataGridViewImageColumn(7, "圖片1");
+            this.AddNewDataGridViewImageColumn(8, "圖片2");
 
-            DataGridViewImageColumn iconColumn2 = new DataGridViewImageColumn
-            {
-                ImageLayout = DataGridViewImageCellLayout.Zoom
-            };
-            dataGridView1.Columns.Insert(8, iconColumn2);
-            dataGridView1.Columns[8].HeaderText = "圖片2";
-
+            // Add the images to each row.
             for (int row = 0; row < dataGridView1.Rows.Count; row++)
             {
-                Bitmap bmp1 = new Bitmap(data[row].image1);
+                Bitmap bmp1 = new Bitmap(data[row].CompressImage1);
                 ((DataGridViewImageCell)dataGridView1.Rows[row].Cells[7]).Value = bmp1;
-                Bitmap bmp2 = new Bitmap(data[row].image2);
+
+                Bitmap bmp2 = new Bitmap(data[row].CompressImage2);
                 ((DataGridViewImageCell)dataGridView1.Rows[row].Cells[8]).Value = bmp2;
             }
+        }
+
+        private List<Record> GetDateRangeRecord()
+        {
+            List<Record> data = new List<Record>();
+            var range = dateTimePicker2.Value - dateTimePicker1.Value;
+            int days = range.Days;
+
+            var temp = dateTimePicker1.Value;
+            for (int i = 0; i <= days; i++)
+            {
+                string dayPath = "D:\\files\\" + temp.ToString("yyyy_MM_dd");
+                if (Directory.Exists(dayPath))
+                {
+                    data.AddRange(CSV.Read<Record>(dayPath + "\\record.csv", false));
+                }
+                temp = temp.AddDays(1);
+            }
+            return data;
+        }
+
+        private void AddNewDataGridViewImageColumn(int index, string headerText)
+        {
+            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn
+            {
+                ImageLayout = DataGridViewImageCellLayout.Zoom
+            };
+
+            dataGridView1.Columns.Insert(index, iconColumn);
+            dataGridView1.Columns[index].HeaderText = headerText;
         }
     }
 }

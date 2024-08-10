@@ -7,7 +7,6 @@ namespace 記帳.Components
 {
     public partial class NavBar : UserControl
     {
-
         public NavBar()
         {
             InitializeComponent();
@@ -17,7 +16,6 @@ namespace 記帳.Components
         {
             Button button = (Button)sender;
             Enum.TryParse(button.Tag.ToString(), out FormType type);
-
             Form form = SingletonForm.GetForm(type);
             form.Show();
         }
