@@ -12,6 +12,7 @@ namespace 記帳.Forms
 {
     public partial class AddRecordForm : Form
     {
+        private string uploadImage = "D:\\files\\images\\upload_image.png";
         public AddRecordForm()
         {
             InitializeComponent();
@@ -19,7 +20,6 @@ namespace 記帳.Forms
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            string uploadImage = "D:\\files\\images\\upload_image.png";
             pictureBox1.Load(uploadImage);
             pictureBox2.Load(uploadImage);
         }
@@ -45,6 +45,11 @@ namespace 記帳.Forms
         }
 
         private void button1_Click(object sender, System.EventArgs e)
+        {
+            this.DebounceClick(() => Process(), 1000);
+        }
+
+        private void Process()
         {
             string path = "D:\\files";
             this.CheckPathExists(path);
@@ -75,6 +80,27 @@ namespace 記帳.Forms
             };
 
             CSV.Write(currentDayPath + "\\record.csv", records, true, false);
+
+            this.ResetView();
+        }
+
+        private void ResetView()
+        {
+            if (pictureBox1.Image != null || pictureBox2.Image != null)
+            {
+                pictureBox1.Image.Dispose();  // 釋放原有的圖片資源
+                pictureBox1.Image = null;
+                pictureBox2.Image.Dispose();  // 釋放原有的圖片資源
+                pictureBox2.Image = null;
+            }
+            GC.Collect();
+            pictureBox1.Load(uploadImage);
+            pictureBox2.Load(uploadImage);
+            textBoxAmount.Text = "";
+            comboBoxType.Text = "";
+            comboBoxItem.Text = "";
+            comboBoxPaymentMethod.Text = "";
+            comboBoxTarget.Text = "";
         }
 
         private void CheckPathExists(string path)
