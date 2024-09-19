@@ -6,12 +6,15 @@ using System.Windows.Forms;
 using 記帳.Extensions;
 using 記帳.Models;
 using 記帳.Models.ModelTypes;
+using 記帳.Repository;
 using 記帳.Utils;
 
 namespace 記帳.Forms
 {
     public partial class AddRecordForm : Form
     {
+        CsvService csvService = new CsvService();
+
         private string uploadImage = "D:\\files\\images\\upload_image.png";
         public AddRecordForm()
         {
@@ -79,7 +82,7 @@ namespace 記帳.Forms
                 imagePath2.Compress)
             };
 
-            CSV.Write(currentDayPath + "\\record.csv", records, true, false);
+            this.csvService.Write(currentDayPath, records);
 
             this.ResetView();
         }

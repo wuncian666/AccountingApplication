@@ -1,16 +1,17 @@
-﻿using CSVHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using 記帳.Models;
+using 記帳.Repository;
 using 記帳.Utils;
 
 namespace 記帳.Forms
 {
     public partial class RecordForm : Form
     {
+        CsvService csvService = new CsvService();
+
         public RecordForm()
         {
             InitializeComponent();
@@ -18,15 +19,7 @@ namespace 記帳.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             this.DebounceClick(() => ResetView(), 1000);
-            //debounce.Click(() =>
-            //{
-            //    this.Invoke((Action)(() =>
-            //    {
-            //        ResetView();
-            //    }));
-            //}, 1000);
         }
 
         private void ResetView()
@@ -34,7 +27,7 @@ namespace 記帳.Forms
             dataGridView1.Columns.Clear();
             GC.Collect();
 
-            List<Record> data = this.GetDateRangeRecord();
+            List<Record> data = this.csvService.GetDateRangeRecord(dateTimePicker1.Value, dateTimePicker2.Value);
             dataGridView1.DataSource = data;
 
             // Hide the path columns.
@@ -57,25 +50,6 @@ namespace 記帳.Forms
             }
         }
 
-        private List<Record> GetDateRangeRecord()
-        {
-            List<Record> data = new List<Record>();
-            var range = dateTimePicker2.Value - dateTimePicker1.Value;
-            int days = range.Days;
-
-            var temp = dateTimePicker1.Value;
-            for (int i = 0; i <= days; i++)
-            {
-                string dayPath = "D:\\files\\" + temp.ToString("yyyy_MM_dd");
-                if (Directory.Exists(dayPath))
-                {
-                    data.AddRange(CSV.Read<Record>(dayPath + "\\record.csv", false));
-                }
-                temp = temp.AddDays(1);
-            }
-            return data;
-        }
-
         private void AddNewDataGridViewImageColumn(int index, string headerText)
         {
             DataGridViewImageColumn iconColumn = new DataGridViewImageColumn
@@ -91,7 +65,7 @@ namespace 記帳.Forms
         {
             Console.WriteLine(e.RowIndex + "," + e.ColumnIndex);
 
-            List<Record> data = this.GetDateRangeRecord();
+            List<Record> data = this.csvService.GetDateRangeRecord(dateTimePicker1.Value, dateTimePicker2.Value);
 
             string imagePath = "";
             if (e.ColumnIndex == 7)
