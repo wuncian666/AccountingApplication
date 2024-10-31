@@ -1,25 +1,28 @@
-﻿using CSVHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
+using 記帳.Contracts;
 using 記帳.Extensions;
 using 記帳.Models;
 using 記帳.Models.ModelTypes;
-using 記帳.Repository;
+using 記帳.Presenters;
 using 記帳.Utils;
 
 namespace 記帳.Forms
 {
-    public partial class AddRecordForm : Form
+    public partial class AddRecordForm : Form, Contracts.IAddRecordView
     {
-        CsvService csvService = new CsvService();
+        IAddRecordPresenter presenter = null;
 
         private string uploadImage = "D:\\files\\images\\upload_image.png";
         public AddRecordForm()
         {
             InitializeComponent();
-            ComboBoxOptions();
+            presenter = new AddRecordPresenter(this);
+            //ComboBoxOptions();
+            comboBoxType.ComboBoxOptions(ModelTypes.types);
+            comboBoxPaymentMethod.ComboBoxOptions(ModelTypes.paymentMethods);
+            comboBoxTarget.ComboBoxOptions(ModelTypes.targets);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -27,19 +30,12 @@ namespace 記帳.Forms
             pictureBox2.Load(uploadImage);
         }
 
-        private void ComboBoxOptions()
+        public void OnAddRecord()
         {
-            comboBoxType.FillingComboBoxItem(ModelTypes.types);
-            comboBoxType.SelectedIndex = 0;
-
-            comboBoxPaymentMethod.FillingComboBoxItem(ModelTypes.paymentMethods);
-            comboBoxPaymentMethod.SelectedIndex = 0;
-
-            comboBoxTarget.FillingComboBoxItem(ModelTypes.targets);
-            comboBoxTarget.SelectedIndex = 0;
+            this.ResetView();
         }
 
-        private void comboBoxType_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void comboBoxType_SelectedIndexChanged(object sender, EventArgs e)
         {
             comboBoxItem.Items.Clear();
             int index = ((ComboBox)sender).SelectedIndex;
@@ -47,17 +43,17 @@ namespace 記帳.Forms
             comboBoxItem.SelectedIndex = 0;
         }
 
-        private void button1_Click(object sender, System.EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            this.DebounceClick(() => Process(), 1000);
+            this.DebounceClick(() => this.Process(), 1000);
         }
 
         private void Process()
         {
             string path = "D:\\files";
-            this.CheckPathExists(path);
+            PathUtils.CheckPathExists(path);
             string currentDayPath = path + "\\" + dateTimePicker1.Value.ToString("yyyy_MM_dd");
-            this.CheckPathExists(currentDayPath);
+            PathUtils.CheckPathExists(currentDayPath);
 
             // Compress to a percentage of the oriainal image.
             int quality = 1;
@@ -82,9 +78,7 @@ namespace 記帳.Forms
                 imagePath2.Compress)
             };
 
-            this.csvService.Write(currentDayPath, records);
-
-            this.ResetView();
+            this.presenter.AddRecord(currentDayPath, records);
         }
 
         private void ResetView()
@@ -97,21 +91,13 @@ namespace 記帳.Forms
                 pictureBox2.Image = null;
             }
             GC.Collect();
-            pictureBox1.Load(uploadImage);
-            pictureBox2.Load(uploadImage);
+            pictureBox1.Load(this.uploadImage);
+            pictureBox2.Load(this.uploadImage);
             textBoxAmount.Text = "";
-            comboBoxType.Text = "";
-            comboBoxItem.Text = "";
-            comboBoxPaymentMethod.Text = "";
-            comboBoxTarget.Text = "";
-        }
-
-        private void CheckPathExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            comboBoxType.SelectedIndex = 0;
+            comboBoxItem.SelectedIndex = 0;
+            comboBoxPaymentMethod.SelectedIndex = 0;
+            comboBoxTarget.SelectedIndex = 0;
         }
 
         private void image_Click(object sender, EventArgs e)
