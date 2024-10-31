@@ -4,9 +4,8 @@ namespace 記帳.Models.ModelTypes
 {
     internal class ModelTypes
     {
-
         public static string[] types =
-            {
+         {
                 "飲食", "日常用品", "交通", "水電瓦斯", "電話網路", "娛樂", "醫療", "其他"
             };
 
@@ -60,6 +59,25 @@ namespace 記帳.Models.ModelTypes
                 "其他"
             };
 
+        public static Dictionary<string, string[]> allOptions = new Dictionary<string, string[]>()
+        {
+            {"所有類別", types },
+            {"所有付款方式", paymentMethods },
+            {"所有對象", targets }
+        };
+
+        public static Dictionary<string, string[]> typesMap = new Dictionary<string, string[]>
+        {
+            {"飲食", dietItems},
+            {"日常用品", dailyItems},
+            {"交通", trafficItems},
+            {"水電瓦斯", utilitiesItems},
+            {"電話網路", phoneItems},
+            {"娛樂", entertainmentItems},
+            {"醫療", medicalItems},
+            {"其他", otherItems}
+        };
+
         private static Dictionary<int, string[]> items = new Dictionary<int, string[]>
             {
                 { 0, dietItems },
@@ -72,14 +90,9 @@ namespace 記帳.Models.ModelTypes
                 { 7, otherItems }
             };
 
-        public ModelTypes()
-        {
-        }
-
         public static string[] GetItems(int index)
         {
             return items[index];
         }
-
     }
 }

@@ -4,7 +4,7 @@ using 記帳.Models.Enums;
 
 namespace 記帳.Forms
 {
-    class SingletonForm
+    internal class SingletonForm
     {
         private static Form form = null;
 
@@ -12,25 +12,26 @@ namespace 記帳.Forms
 
         public static Form GetForm(FormType type)
         {
-            if (form != null)
-            {
-                form.Hide();
-            }
+            form?.Hide();
 
             switch (type)
             {
                 case FormType.AddOneRecordForm:
                     form = new AddRecordForm();
                     break;
+
                 case FormType.RecordForm:
                     form = new RecordForm();
                     break;
+
                 case FormType.AccountForm:
                     form = new AccountForm();
                     break;
+
                 case FormType.ChartForm:
                     form = new ChartForm();
                     break;
+
                 default:
                     form = new AddRecordForm();
                     break;

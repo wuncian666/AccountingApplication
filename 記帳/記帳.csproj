@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,13 @@
     <Compile Include="Components\NavBar.Designer.cs">
       <DependentUpon>NavBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Contracts\AccountContract.cs" />
+    <Compile Include="Contracts\AddRecordContract.cs" />
+    <Compile Include="Contracts\ChartContract.cs" />
+    <Compile Include="Contracts\RecordContract.cs" />
     <Compile Include="Extensions\ComboBoxExtension.cs" />
+    <Compile Include="Extensions\DataGridViewComboBoxColumnExtension.cs" />
+    <Compile Include="Extensions\DataGridViewExtension.cs" />
     <Compile Include="Forms\AccountForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +81,9 @@
     <Compile Include="Forms\ImageForm.Designer.cs">
       <DependentUpon>ImageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MultipleCheckBoxBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\RecordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,12 +98,20 @@
     </Compile>
     <Compile Include="Forms\SingletonForm.cs" />
     <Compile Include="Models\Enums\FormType.cs" />
+    <Compile Include="Models\Enums\RecordColumn.cs" />
     <Compile Include="Models\ImagePath.cs" />
     <Compile Include="Models\ModelTypes\ModelTypes.cs" />
+    <Compile Include="Models\ModelTypes\RecordModel.cs" />
     <Compile Include="Models\Record.cs" />
+    <Compile Include="Presenters\AccountingPresenter.cs" />
+    <Compile Include="Presenters\AddRecordPresenter.cs" />
+    <Compile Include="Presenters\ChartPresenter.cs" />
+    <Compile Include="Presenters\RecordPresenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CsvService.cs" />
+    <Compile Include="Service\DataGroupByService.cs" />
+    <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\Debounce.cs" />
     <Compile Include="Utils\ImageCompress.cs" />
     <EmbeddedResource Include="Components\NavBar.resx">
@@ -136,6 +154,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utils\UI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

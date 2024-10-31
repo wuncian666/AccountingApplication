@@ -2,7 +2,7 @@
 
 namespace 記帳.Models
 {
-    internal class Record
+    public class Record
     {
         [DisplayName("總計")]
         public string Amount { get; set; }

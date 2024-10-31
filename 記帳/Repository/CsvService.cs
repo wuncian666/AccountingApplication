@@ -13,6 +13,11 @@ namespace 記帳.Repository
             CSV.Write(currentDayPath + "\\record.csv", records, true, false);
         }
 
+        public void Clear(String currentDayPath)
+        {
+            File.Delete(currentDayPath + "\\record.csv");
+        }
+
         public List<Record> GetDateRangeRecord(DateTime picker1, DateTime picker2)
         {
             List<Record> data = new List<Record>();

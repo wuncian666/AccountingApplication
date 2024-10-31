@@ -22,5 +22,11 @@ namespace 記帳.Extensions
                 comboBox.Items.Add(item);
             }
         }
+
+        public static void ComboBoxOptions(this ComboBox comboBox, string[] options)
+        {
+            comboBox.FillingComboBoxItem(options);
+            comboBox.SelectedIndex = 0;
+        }
     }
 }
