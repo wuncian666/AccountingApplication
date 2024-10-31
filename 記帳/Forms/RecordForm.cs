@@ -1,84 +1,123 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
+using 記帳.Contracts;
+using 記帳.Extensions;
 using 記帳.Models;
-using 記帳.Repository;
+using 記帳.Models.ModelTypes;
+using 記帳.Presenters;
 using 記帳.Utils;
 
 namespace 記帳.Forms
 {
-    public partial class RecordForm : Form
+    public partial class RecordForm : Form, Contracts.IRecordView
     {
-        CsvService csvService = new CsvService();
+        IRecordPresenter presenter = null;
+
+        List<Record> records = null;
 
         public RecordForm()
         {
             InitializeComponent();
+            this.presenter = new RecordPresenter(this);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.DebounceClick(() => ResetView(), 1000);
-        }
-
-        private void ResetView()
-        {
-            dataGridView1.Columns.Clear();
-            GC.Collect();
-
-            List<Record> data = this.csvService.GetDateRangeRecord(dateTimePicker1.Value, dateTimePicker2.Value);
-            dataGridView1.DataSource = data;
-
-            // Hide the path columns.
-            dataGridView1.Columns[5].Visible = false;
-            dataGridView1.Columns[6].Visible = false;
-            dataGridView1.Columns[7].Visible = false;
-            dataGridView1.Columns[8].Visible = false;
-
-            this.AddNewDataGridViewImageColumn(7, "圖片1");
-            this.AddNewDataGridViewImageColumn(8, "圖片2");
-
-            // Add the images to each row.
-            for (int row = 0; row < dataGridView1.Rows.Count; row++)
-            {
-                Bitmap bmp1 = new Bitmap(data[row].Image1);
-                ((DataGridViewImageCell)dataGridView1.Rows[row].Cells[7]).Value = bmp1;
-
-                Bitmap bmp2 = new Bitmap(data[row].Image2);
-                ((DataGridViewImageCell)dataGridView1.Rows[row].Cells[8]).Value = bmp2;
-            }
-        }
-
-        private void AddNewDataGridViewImageColumn(int index, string headerText)
-        {
-            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn
-            {
-                ImageLayout = DataGridViewImageCellLayout.Zoom
-            };
-
-            dataGridView1.Columns.Insert(index, iconColumn);
-            dataGridView1.Columns[index].HeaderText = headerText;
+            this.DebounceClick(() =>
+                this.presenter.GetDataRangeRecord(dateTimePicker1.Value, dateTimePicker2.Value),
+                1000);
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            Console.WriteLine(e.RowIndex + "," + e.ColumnIndex);
-
-            List<Record> data = this.csvService.GetDateRangeRecord(dateTimePicker1.Value, dateTimePicker2.Value);
-
-            string imagePath = "";
-            if (e.ColumnIndex == 7)
+            Record record = records[e.RowIndex];
+            switch (e.ColumnIndex)
             {
-                imagePath = data[e.RowIndex].Image1;
+                case 7:
+                    this.presenter.OnClickImage(record.Image1);
+                    break;
+                case 8:
+                    this.presenter.OnClickImage(record.Image2);
+                    break;
+                case 9:
+                    // delete row
+                    this.records.Remove(records[e.RowIndex]);
+                    string path = PathUtils.GetPathFromImagePath(record.Image1);
+                    this.presenter.DeleteRecord(path, this.records);
+                    break;
             }
-            else if (e.ColumnIndex == 8)
-            {
-                imagePath = data[e.RowIndex].Image2;
-            }
+        }
 
-            ImageForm imageForm = new ImageForm(imagePath);
-            imageForm.ShowDialog();
+        public void ResetView(List<Record> records)
+        {
+            this.records = records;
+            dataGridView1.Columns.Clear();
+            GC.Collect();
+            dataGridView1.DataSource = records;
+
+            if (dataGridView1.Columns.Count == 0) return;
+            int[] columns = { 5, 6, 7, 8 };
+            dataGridView1.GroupHide(columns);
+            dataGridView1.AddImageColumn(7, "圖片1");
+            dataGridView1.AddImageColumn(8, "圖片2");
+            dataGridView1.AddTrashcan(9);
+            dataGridView1.SetRowImage(7, 8);
+            dataGridView1.SetComboBox();
+        }
+
+        // 修改按下 Enter 觸發
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            Console.WriteLine($"{e.ColumnIndex}, {e.RowIndex}");
+            // 當下點的 cell
+            string newValue = dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString();
+
+            Record record = records[e.RowIndex];
+            string path = PathUtils.GetPathFromImagePath(record.Image1);
+
+            switch (e.ColumnIndex)
+            {
+                case 0:
+                    record.Amount = newValue;
+                    this.presenter.EditRecord(path, this.records);
+                    break;
+                case 1:
+                    // 從類型選甚麼 map 出項目種類 items
+                    string[] items = ModelTypes.typesMap[newValue];
+                    // 抓項目的欄位(2)
+                    DataGridViewComboBoxCell item = (DataGridViewComboBoxCell)dataGridView1[2, e.RowIndex];
+                    item.DataSource = items; // change combo box items
+                    item.Value = items[0];
+                    record.Type = newValue;
+                    record.Item = dataGridView1[2, e.RowIndex].Value.ToString();
+                    this.presenter.EditRecord(path, this.records);
+                    break;
+                case 2:
+                    record.Item = newValue;
+                    this.presenter.EditRecord(path, this.records);
+                    break;
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

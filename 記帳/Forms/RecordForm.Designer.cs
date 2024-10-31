@@ -41,6 +41,7 @@
             // navBar1
             // 
             this.navBar1.Location = new System.Drawing.Point(12, 381);
+            this.navBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.navBar1.Name = "navBar1";
             this.navBar1.Size = new System.Drawing.Size(321, 57);
             this.navBar1.TabIndex = 0;
@@ -54,6 +55,7 @@
             this.dataGridView1.Size = new System.Drawing.Size(760, 324);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             // 
             // button1
             // 
@@ -71,6 +73,7 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
             this.dateTimePicker1.TabIndex = 3;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
             // dateTimePicker2
             // 
@@ -78,6 +81,7 @@
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(200, 22);
             this.dateTimePicker2.TabIndex = 4;
+            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // label1
             // 
@@ -87,6 +91,7 @@
             this.label1.Size = new System.Drawing.Size(17, 12);
             this.label1.TabIndex = 5;
             this.label1.Text = "起";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -96,6 +101,7 @@
             this.label2.Size = new System.Drawing.Size(17, 12);
             this.label2.TabIndex = 6;
             this.label2.Text = "迄";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // RecordForm
             // 
