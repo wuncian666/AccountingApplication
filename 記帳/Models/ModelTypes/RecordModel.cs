@@ -15,4 +15,12 @@
         public int Sum { get; set; }
         public int Count { get; set; }
     }
+
+    public class RecordForStackedColumn
+    {
+        public string Date { get; set; }
+        public string Conditions { get; set; }
+        public int Sum { get; set; }
+        public int Count { get; set; }
+    }
 }

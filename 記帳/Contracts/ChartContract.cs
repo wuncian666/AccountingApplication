@@ -12,13 +12,11 @@ namespace 記帳.Contracts
         void GetDataRangeRecord(
             DateTime picker1,
             DateTime picker2,
-            List<string> typeCheckBoxOptions,
-            List<string> paymentCheckBoxOptions,
-            List<string> targetCheckBoxOptions);
+            Dictionary<string, HashSet<string>> optionsForAllCheckBoxes);
     }
 
     public interface IChartView
     {
-        void DrawingChart(List<GroupAccountingModel> data);
+        void DrawingChart(List<GroupAccountingModel> groups);
     }
 }

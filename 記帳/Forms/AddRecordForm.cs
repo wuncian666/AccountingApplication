@@ -12,9 +12,10 @@ namespace 記帳.Forms
 {
     public partial class AddRecordForm : Form, Contracts.IAddRecordView
     {
-        IAddRecordPresenter presenter = null;
+        private IAddRecordPresenter presenter = null;
 
         private string uploadImage = "D:\\files\\images\\upload_image.png";
+
         public AddRecordForm()
         {
             InitializeComponent();
@@ -67,15 +68,17 @@ namespace 記帳.Forms
 
             List<Record> records = new List<Record>
             {
-                new Record(textBoxAmount.Text,
-                comboBoxType.Text,
-                comboBoxItem.Text,
-                comboBoxPaymentMethod.Text,
-                comboBoxTarget.Text,
-                imagePath1.Origin,
-                imagePath1.Compress,
-                imagePath2.Origin,
-                imagePath2.Compress)
+                new Record(
+                    dateTimePicker1.Value.ToString("yyyy-MM-dd"),
+                    textBoxAmount.Text,
+                    comboBoxType.Text,
+                    comboBoxItem.Text,
+                    comboBoxPaymentMethod.Text,
+                    comboBoxTarget.Text,
+                    imagePath1.Origin,
+                    imagePath1.Compress,
+                    imagePath2.Origin,
+                    imagePath2.Compress)
             };
 
             this.presenter.AddRecord(currentDayPath, records);
