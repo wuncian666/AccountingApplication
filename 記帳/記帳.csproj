@@ -50,6 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chart\ChartTypes\ChartType.cs" />
+    <Compile Include="Chart\ChartTypes\Line.cs" />
+    <Compile Include="Chart\ChartTypes\Pie.cs" />
+    <Compile Include="Chart\ChartTypes\StackedColumn.cs" />
+    <Compile Include="Chart\SeriesFactory.cs" />
     <Compile Include="Components\NavBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -110,6 +115,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CsvService.cs" />
+    <Compile Include="Service\ChartBuilder.cs" />
     <Compile Include="Service\DataGroupByService.cs" />
     <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />

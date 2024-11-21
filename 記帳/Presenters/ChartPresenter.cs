@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
+using ChartGraph = System.Windows.Forms.DataVisualization.Charting.Chart;
 using 記帳.Contracts;
 using 記帳.Models;
 using 記帳.Models.ModelTypes;
@@ -17,7 +19,10 @@ namespace 記帳.Presenters
         private IChartView view = null;
 
         private CsvService csvService = new CsvService();
-        private DataGroupByService dataGroupByService = new DataGroupByService();
+
+        private ChartBuilder chartBuilder = new ChartBuilder();
+
+        private List<Record> records = new List<Record>();
 
         public ChartPresenter(IChartView view)
         {
@@ -29,34 +34,34 @@ namespace 記帳.Presenters
             DateTime picker2,
             Dictionary<string, HashSet<string>> optionsForAllCheckBoxes)
         {
-            List<Record> data =
+            // step1
+            this.records =
                 this.csvService.GetDateRangeRecord(picker1, picker2);
+            NotifyChartTypeChanged(optionsForAllCheckBoxes);
+        }
 
-            // 給圓餅圖
-            List<GroupAccountingModel> groupData =
-                this.dataGroupByService.GroupToAccountingModel(
-                    data,
-                    optionsForAllCheckBoxes);
+        public void ChartTypeChanged(Dictionary<string, HashSet<string>> optionsForAllCheckBoxes)
+        {
+            SeriesChartType selectedType = view.GetSealectedChartType();
+            Console.WriteLine(selectedType.ToString());
 
-            // 給折線圖
+            if (this.records.Count == 0)
+            {
+                return;
+            }
+            NotifyChartTypeChanged(optionsForAllCheckBoxes);
+        }
 
-            // 給長條圖
+        private void NotifyChartTypeChanged(Dictionary<string, HashSet<string>> optionsForAllCheckBoxes)
+        {
+            ChartGraph chart = this.chartBuilder
+            .SetRecord(this.records)
+            .SetOptionsForAllCheckBox(optionsForAllCheckBoxes)
+            .GroupData()
+            .BindingData(this.view.GetSealectedChartType())
+            .Build();
 
-            //var allDates = DateUtils.GetTimeRange(picker1, picker2);
-            //Console.WriteLine($"AllDate Count:= {allDates.Count}");
-
-            //List<RecordForStackedColumn> recordForStackedColumn =
-            //    this.dataGroupByService.GroupByForStackedColumn(
-            //        allDates,
-            //        data,
-            //        optionsForAllCheckBoxes);
-
-            //Dictionary<string, List<int>> seriesData =
-            //    this.dataGroupByService.GenerateSeriesData(
-            //        recordForStackedColumn,
-            //        allDates);
-
-            this.view.DrawingChart(groupData);
+            this.view.DrawingChart(chart);
         }
     }
 }

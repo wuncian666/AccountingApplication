@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
+using ChartGraph = System.Windows.Forms.DataVisualization.Charting.Chart;
+
+using 記帳.Models;
 using 記帳.Models.ModelTypes;
 
 namespace 記帳.Contracts
@@ -13,10 +17,15 @@ namespace 記帳.Contracts
             DateTime picker1,
             DateTime picker2,
             Dictionary<string, HashSet<string>> optionsForAllCheckBoxes);
+
+        void ChartTypeChanged(
+            Dictionary<string, HashSet<string>> optionsForAllCheckBoxes);
     }
 
     public interface IChartView
     {
-        void DrawingChart(List<GroupAccountingModel> groups);
+        void DrawingChart(ChartGraph chart);
+
+        SeriesChartType GetSealectedChartType();
     }
 }
